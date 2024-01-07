@@ -159,11 +159,12 @@ use App\Http\Controllers\cards\CardGamifications;
 use App\Http\Controllers\layouts\NavbarFull;
 use App\Http\Controllers\layouts\NavbarFullSidebar;
 use Illuminate\Support\Facades\Route;
-
+Route::group(['middleware' => 'auth:sanctum', 'verified'],function() {
 // Main Page Route
-Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
-Route::get('/dashboard/analytics', [Analytics::class, 'index'])->name('dashboard-analytics');
-Route::get('/dashboard/crm', [Crm::class, 'index'])->name('dashboard-crm');
+  Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
+  Route::get('/dashboard/analytics', [Analytics::class, 'index'])->name('dashboard-analytics');
+  Route::get('/dashboard/crm', [Crm::class, 'index'])->name('dashboard-crm');
+
 // locale
 Route::get('lang/{locale}', [LanguageController::class, 'swap']);
 
@@ -358,3 +359,14 @@ Route::get('/maps/leaflet', [Leaflet::class, 'index'])->name('maps-leaflet');
 // laravel example
 Route::get('/laravel/user-management', [UserManagement::class, 'UserManagement'])->name('laravel-example-user-management');
 Route::resource('/user-list', UserManagement::class);
+});
+
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+});
