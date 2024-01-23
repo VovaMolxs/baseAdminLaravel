@@ -47,8 +47,9 @@
             <th></th>
             <th></th>
             <th>Categories</th>
-            <th class="text-nowrap text-sm-end">Total Products &nbsp;</th>
-            <th class="text-nowrap text-sm-end">Total Earning</th>
+            <th class="text-nowrap text-sm-end">Slug</th>
+            <th class="text-nowrap text-sm-end">Parent ID</th>
+            <th class="text-nowrap text-sm-end">Menu</th>
             <th class="text-lg-center">Actions</th>
           </tr>
         </thead>

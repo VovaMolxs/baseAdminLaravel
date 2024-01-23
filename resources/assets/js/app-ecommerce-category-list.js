@@ -49,20 +49,37 @@ $(function () {
     });
   }
 
+  $.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  });
   // Customers List Datatable
-
+  let route = baseUrl + 'category-list',
+    route2 = assetsPath + 'json/ecommerce-category-list.json';
+  $.getJSON( route2, function( data ) {
+    console.log(data);
+  });
+  $.getJSON( route, function( data ) {
+    console.log(data);
+  });
   if (dt_category_list_table.length) {
+
+
     var dt_category = dt_category_list_table.DataTable({
-      ajax: assetsPath + 'json/ecommerce-category-list.json', // JSON file to add data
+      ajax: route, // JSON file to add data
       columns: [
         // columns according to JSON
         { data: '' },
         { data: 'id' },
         { data: 'categories' },
-        { data: 'total_products' },
-        { data: 'total_earnings' },
+        { data: 'slug' },
+        { data: 'menu' },
+        { data: 'parent_id' },
         { data: '' }
+
       ],
+
       columnDefs: [
         {
           // For Responsive
@@ -94,8 +111,9 @@ $(function () {
           targets: 2,
           responsivePriority: 2,
           render: function (data, type, full, meta) {
+
             var $name = full['categories'],
-              $category_detail = full['category_detail'],
+              $category_detail = full['slug'],
               $image = full['cat_image'],
               $id = full['id'];
             if ($image) {
@@ -139,21 +157,35 @@ $(function () {
           }
         },
         {
-          // Total products
+          // Slug
           targets: 3,
           responsivePriority: 3,
           render: function (data, type, full, meta) {
-            var $total_products = full['total_products'];
-            return '<div class="text-sm-end">' + $total_products + '</div>';
+            var $slug = full['slug'];
+            return '<div class="text-sm-end">' + $slug + '</div>';
           }
         },
         {
-          // Total Earnings
+          // Parent ID
           targets: 4,
           orderable: false,
           render: function (data, type, full, meta) {
-            var $total_earnings = full['total_earnings'];
-            return "<div class='h6 mb-0 text-sm-end'>" + $total_earnings + '</div';
+            var $parent_id = full['parent_id'];
+            return "<div class='h6 mb-0 text-sm-end'>" + $parent_id + '</div';
+          }
+        },
+        {
+          //Menu
+          targets: 5,
+          orderable: false,
+          render: function(data, type, full, meta) {
+            var $menu = full['menu'];
+            if ($menu == '1') {
+              return '<span class="badge bg-label-success">yes</span>';
+            } else {
+              return '<span class="badge bg-label-danger">no</span>';
+            }
+
           }
         },
         {
@@ -213,18 +245,18 @@ $(function () {
             var data = $.map(columns, function (col, i) {
               return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
                 ? '<tr data-dt-row="' +
-                    col.rowIndex +
-                    '" data-dt-column="' +
-                    col.columnIndex +
-                    '">' +
-                    '<td> ' +
-                    col.title +
-                    ':' +
-                    '</td> ' +
-                    '<td class="ps-0">' +
-                    col.data +
-                    '</td>' +
-                    '</tr>'
+                col.rowIndex +
+                '" data-dt-column="' +
+                col.columnIndex +
+                '">' +
+                '<td> ' +
+                col.title +
+                ':' +
+                '</td> ' +
+                '<td class="ps-0">' +
+                col.data +
+                '</td>' +
+                '</tr>'
                 : '';
             }).join('');
 

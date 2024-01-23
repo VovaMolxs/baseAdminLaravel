@@ -19,7 +19,7 @@ Homestead.yaml
 auth.json
 npm-debug.log
 yarn-error.log
-yarn.lock
+yarn1.lock
 package-lock.json
 package-lock.log
 /.fleet
